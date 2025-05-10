@@ -1,4 +1,4 @@
-# My submission for the Amazon Q Developer Quack The Code Challenge. There is another readme!
+# My submission for the Amazon Q Developer Quack The Code Challenge.
 
 
 # BankNifty Algorithmic Trading System
