@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bank Nifty Algo Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #e3f2fd, #fce4ec);
+      margin: 0;
+      padding: 20px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      font-size: 24px;
+      color: #333;
+    }
+    .header-buttons button {
+      padding: 10px 15px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .kill {
+      background-color: #e53935;
+      color: white;
+    }
+    .shutdown {
+      background-color: #616161;
+      color: white;
+    }
+    form {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .panel {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .input-box {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 20px;
+      width: 350px;
+      border-top: 5px solid #1976d2;
+    }
+    .input-box.put {
+      border-top-color: #c2185b;
+    }
+    .input-box h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #1976d2;
+      text-align: center;
+    }
+    .input-box.put h3 {
+      color: #c2185b;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 5px;
+      display: block;
+    }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button.submit {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      width: 100%;
+      padding: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .section-title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      margin: 20px 0 10px;
+    }
+    .executed-trades {
+      margin-top: 40px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Bank Nifty Algo Setup</h1>
+    <div class="header-buttons">
+      <form method="POST" action="/kill-switch/" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="kill">Kill Switch</button>
+      </form>
+      <form method="POST" action="/shutdown/" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="shutdown">Server On/Off</button>
+      </form>
+    </div>
+  </div>
+
+  <form method="POST" action="/submit-input/">
+    {% csrf_token %}
+    <div class="panel">
+      <div class="input-box">
+        <h3>Call Entry Setup</h3>
+        <div class="form-group">
+          <label for="call_token">Call symbol</label>
+          <input type="text" id="call_symbol" name="call_symbol" required>
+        </div>
+        <div class="form-group">
+          <label for="long_entry_trigger">Trigger Level</label>
+          <input type="number" id="long_entry_trigger" name="long_entry_trigger" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="long_target">Post Trigger Target</label>
+          <input type="number" id="long_target" name="long_target" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="long_stoploss">Post Trigger Stoploss</label>
+          <input type="number" id="long_stoploss" name="long_stoploss" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="quantity_call">Quantity (in units)</label>
+          <input type="number" id="quantity_call" name="quantity_call" min="1" required>
+        </div>
+      </div>
+
+      <div class="input-box put">
+        <h3>Put Entry Setup</h3>
+        <div class="form-group">
+          <label for="put_symbol">Put symbol</label>
+          <input type="text" id="put_symbol" name="put_symbol" required>
+        </div>
+        <div class="form-group">
+          <label for="short_entry_trigger">Trigger Level</label>
+          <input type="number" id="short_entry_trigger" name="short_entry_trigger" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="short_target">Post Trigger Target</label>
+          <input type="number" id="short_target" name="short_target" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="short_stoploss">Post Trigger Stoploss</label>
+          <input type="number" id="short_stoploss" name="short_stoploss" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="quantity_put">Quantity (in units)</label>
+          <input type="number" id="quantity_put" name="quantity_put" min="1" required>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width: 400px; margin: 20px auto;">
+      <button type="submit" class="submit">Submit Trade Details</button>
+    </div>
+  </form>
+
+  <div class="executed-trades">
+    <h3 class="section-title">Executed Trades</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Call Token</th>
+          <th>Put Token</th>
+          <th>Call Trigger</th>
+          <th>Put Trigger</th>
+          <th>Call Qty</th>
+          <th>Put Qty</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for trade in executed_trades %}
+        <tr>
+          <td>{{ trade.timestamp }}</td>
+          <td>{{ trade.call_token }}</td>
+          <td>{{ trade.put_token }}</td>
+          <td>{{ trade.call_trigger }}</td>
+          <td>{{ trade.put_trigger }}</td>
+          <td>{{ trade.quantity_call }}</td>
+          <td>{{ trade.quantity_put }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
