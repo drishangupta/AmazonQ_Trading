@@ -1,3 +1,6 @@
+# My submission for the Amazon Q Developer Quack The Code Challenge. There is another readme!
+
+
 # BankNifty Algorithmic Trading System
 
 This project implements an automated trading system for Bank Nifty options using Django as the backend framework and SmartAPI for trading operations. The system is containerized using Docker for easy deployment and management.
